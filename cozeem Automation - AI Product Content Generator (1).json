@@ -1,0 +1,485 @@
+{
+  "name": "cozeem Automation - AI Product Content Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2000,
+        -256
+      ],
+      "id": "d098b977-95c9-4510-91ae-71efba766062",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4c996351-9c00-4572-a9f2-b9f3de4b4300",
+              "name": "product_name",
+              "value": "Stainless Steel Water Bottle",
+              "type": "string"
+            },
+            {
+              "id": "0f31e77f-e92b-4f25-858f-ffd65ac07f3e",
+              "name": "capacity",
+              "value": "750 ml",
+              "type": "string"
+            },
+            {
+              "id": "cc8ffc4d-3e67-403c-8b5a-ef14507daa40",
+              "name": "features",
+              "value": "Double-wall insulation, leak-resistant lid, reusable design",
+              "type": "string"
+            },
+            {
+              "id": "fa2471b7-085f-4488-baa9-c43d1624bd5c",
+              "name": "target_audience",
+              "value": "Students and office workers",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1552,
+        -256
+      ],
+      "id": "af4c7d5c-0348-4bae-afaf-91d9e97ec925",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert e-commerce product content writer.\n\nUse the supplied product information to generate:\n\n1. An attractive product title.\n2. A persuasive product description.\n3. Three clear product benefits.\n4. Five relevant SEO keywords.\n\nReturn ONLY valid JSON in this exact structure:\n\n{\n\"product_title\": \"Generated title\",\n\"product_description\": \"Generated description\",\n\"benefits\": \"Benefit 1; Benefit 2; Benefit 3\",\n\"seo_keywords\": \"keyword 1, keyword 2, keyword 3, keyword 4, keyword 5\"\n}\n\nProduct information:\nName: {{ $json.product_name }}\nCapacity: {{ $json.capacity }}\nFeatures: {{ $json.features }}\nTarget audience: {{ $json.target_audience }}\n\nDo not invent product specifications. Do not include Markdown formatting or text outside the JSON.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1360,
+        -256
+      ],
+      "id": "1ca5d697-de0e-4f91-962b-9a8f003c787e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "allam-2-7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1504,
+        -48
+      ],
+      "id": "ccd64cb5-74f0-4462-94a0-00d8b95d2979",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "m6TmEYo7dmpqAKyy",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b59cbdc3-161a-474b-bcf3-9716c07fabf7",
+              "name": "=product_name",
+              "value": "={{ $('Get row(s) in sheet').first().json.Product_name }}",
+              "type": "string"
+            },
+            {
+              "id": "561d5e34-e32f-4d6e-98a0-d06b8e22ab8c",
+              "name": "product_title",
+              "value": "={{ JSON.parse($json.output).product_title }}",
+              "type": "string"
+            },
+            {
+              "id": "39e44fb8-d6f2-4654-83b0-668e3383e3c9",
+              "name": "product_description",
+              "value": "={{ JSON.parse($json.output).product_description }}",
+              "type": "string"
+            },
+            {
+              "id": "d6327bfb-c620-4d41-a0d0-304f4f0a781b",
+              "name": "benefits",
+              "value": "={{ JSON.parse($json.output).benefits }}",
+              "type": "string"
+            },
+            {
+              "id": "90f36c6d-3221-4ae4-bff2-d8a5d68a3dd9",
+              "name": "seo_keywords",
+              "value": "={{ JSON.parse($json.output).seo_keywords }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -960,
+        -256
+      ],
+      "id": "af6a662d-d662-43c6-83bf-d8a10cf5a580",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "16W_b51EBhPDRzvjmcM4EUPaTNPnCG3nJtU8MUD_v95w",
+          "mode": "list",
+          "cachedResultName": "Generated Content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16W_b51EBhPDRzvjmcM4EUPaTNPnCG3nJtU8MUD_v95w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16W_b51EBhPDRzvjmcM4EUPaTNPnCG3nJtU8MUD_v95w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "generated_title",
+              "displayName": "generated_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "product_description",
+              "displayName": "product_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "benefits",
+              "displayName": "benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "seo_keywords",
+              "displayName": "seo_keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "product_title",
+              "displayName": "product_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -736,
+        -256
+      ],
+      "id": "ec70cf62-f11c-47bb-8a35-0215dcb46a08",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DesYRKjSmQP9I6r0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw",
+          "mode": "list",
+          "cachedResultName": "product content generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Generated",
+            "product_name": "={{ $('Create spreadsheet').first().json.Product_name }}"
+          },
+          "matchingColumns": [
+            "product_name"
+          ],
+          "schema": [
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "capacity",
+              "displayName": "capacity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "features",
+              "displayName": "features",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "target_audience",
+              "displayName": "target_audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -512,
+        -256
+      ],
+      "id": "fd4b81d2-4483-4c89-a46e-0ab903b376cb",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DesYRKjSmQP9I6r0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw",
+          "mode": "list",
+          "cachedResultName": "product content generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTJMPmgTp3qsDNn-eldJD83i1lxXdqIATDl5CmN_zUw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "pending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1776,
+        -256
+      ],
+      "id": "edbaf415-dce9-4317-a421-e540b77bcee3",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DesYRKjSmQP9I6r0",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "175abc31-d0db-4fd4-bb92-d57e46bfcb8d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eaa10cb74f5f35c8098db9650fb4171c8b6c0c16b4f3d50f813b44d12c3980f6"
+  },
+  "nodeGroups": [],
+  "id": "LAHLussclQ8ErTY6",
+  "tags": []
+}
